@@ -1,0 +1,17 @@
+# Compiled files
+*.class
+out/
+build/
+target/
+
+# IDE files
+.idea/
+*.iml
+.DS_Store
+.vscode/
+
+# Logs
+*.log
+
+# Database config
+# db.properties
