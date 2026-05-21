@@ -125,6 +125,9 @@ public class MainOperationsFrame extends JFrame {
     private void displayEmployees(List<Employee> employees) {
         tableModel.setRowCount(0);
         for (Employee emp : employees) {
+            String salaryStr = (emp.getBasicSalary() > 0)
+                    ? String.format("%,.0f", emp.getBasicSalary()) + " VND"
+                    : "0 VND";
             tableModel.addRow(new Object[]{
                     emp.getEmpId(),
                     emp.getFullName(),
@@ -132,9 +135,9 @@ public class MainOperationsFrame extends JFrame {
                     emp.getGender(),
                     emp.getAge(),
                     emp.getEmpEmail(),
-                    emp.getContactAdd(),
-                    emp.getJobDeptName(),
-                    String.format("%,.0f", emp.getBasicSalary()) + " VND"
+                    emp.getContactAdd() != null ? emp.getContactAdd() : "",
+                    emp.getJobDeptName() != null ? emp.getJobDeptName() : "",
+                    salaryStr
             });
         }
     }

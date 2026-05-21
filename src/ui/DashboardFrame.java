@@ -63,14 +63,11 @@ public class DashboardFrame extends JFrame {
         JButton btnUpdate = createMenuButton("UPDATE");
         btnUpdate.addActionListener(e -> openMainOperations());
 
-        JButton btnPayroll = createMenuButton("PAYROLL");
-        btnPayroll.addActionListener(e -> openPayroll());
 
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnList);
         buttonPanel.add(btnRemove);
         buttonPanel.add(btnUpdate);
-        buttonPanel.add(btnPayroll);
 
         contentPane.add(buttonPanel);
 
@@ -103,7 +100,4 @@ public class DashboardFrame extends JFrame {
         new MainOperationsFrame().setVisible(true);
     }
 
-    private void openPayroll() {
-        new PayrollManager().setVisible(true);
-    }
 }

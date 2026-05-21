@@ -13,7 +13,7 @@ import java.util.List;
 public class AddEmployeeDialog extends JDialog {
     private EmployeeDAO employeeDAO;
     private JobDepartmentDAO jobDepartmentDAO;
-    private JTextField txtFname, txtLname, txtAge, txtContact, txtEmail;
+    private JTextField txtFname, txtLname, txtPosition, txtAge, txtContact, txtEmail,txtSalary;
     private JComboBox<String> cbGender;
     private JComboBox<JobDepartment> cbJob;
     private JSpinner dateSpinner;
@@ -48,6 +48,13 @@ public class AddEmployeeDialog extends JDialog {
         gbc.gridx = 1;
         txtLname = new JTextField(15);
         add(txtLname, gbc);
+        row++;
+
+        gbc.gridx = 0; gbc.gridy = row;
+        add(new JLabel("Position:"), gbc);
+        gbc.gridx = 1;
+        txtPosition = new JTextField(15);
+        add(txtPosition, gbc);
         row++;
 
         gbc.gridx = 0; gbc.gridy = row;
@@ -91,6 +98,13 @@ public class AddEmployeeDialog extends JDialog {
         row++;
 
         gbc.gridx = 0; gbc.gridy = row;
+        add(new JLabel("Basic Salary:"), gbc);
+        gbc.gridx = 1;
+        txtSalary = new JTextField(15);
+        add(txtSalary, gbc);
+        row++;
+
+        gbc.gridx = 0; gbc.gridy = row;
         add(new JLabel("Hire Date:"), gbc);
         gbc.gridx = 1;
         SpinnerDateModel dateModel = new SpinnerDateModel(new Date(), null, null, java.util.Calendar.DAY_OF_MONTH);
@@ -116,6 +130,7 @@ public class AddEmployeeDialog extends JDialog {
         try {
             String fname = txtFname.getText().trim();
             String lname = txtLname.getText().trim();
+            String position = txtPosition.getText().trim();
             if (fname.isEmpty() || lname.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "First name and last name cannot be empty!");
                 return;
@@ -127,21 +142,29 @@ public class AddEmployeeDialog extends JDialog {
                 return;
             }
 
+            double salary = Double.parseDouble(txtSalary.getText().trim());
+            if (salary <= 0) {
+                JOptionPane.showMessageDialog(this, "Salary must be greater than 0!");
+                return;
+            }
+
             Employee emp = new Employee();
             emp.setFname(fname);
             emp.setLname(lname);
+            emp.setPosition(position);
             emp.setGender((String) cbGender.getSelectedItem());
             emp.setAge(age);
             emp.setContactAdd(txtContact.getText().trim());
             emp.setEmpEmail(txtEmail.getText().trim());
             emp.setJobId(((JobDepartment) cbJob.getSelectedItem()).getJobId());
             emp.setHireDate((Date) dateSpinner.getValue());
+            emp.setBasicSalary(salary);
 
             employeeDAO.addEmployee(emp);
             JOptionPane.showMessageDialog(this, "Employee added successfully!");
             dispose();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Age must be a number!");
+            JOptionPane.showMessageDialog(this, "Age and Salary must be numbers!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }

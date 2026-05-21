@@ -162,7 +162,7 @@ public class UpdateEmployeeDialog extends JDialog {
 
             employee.setPosition(txtPosition.getText().trim());
             double newSalary = Double.parseDouble(txtSalary.getText().trim());
-            employeeDAO.updateSalary(employee.getEmpId(), newSalary);
+           // employeeDAO.updateSalary(employee.getEmpId(), newSalary);
 
             int age = Integer.parseInt(txtAge.getText().trim());
             if (age < 18 || age > 100) {
@@ -174,6 +174,7 @@ public class UpdateEmployeeDialog extends JDialog {
             employee.setLname(lname);
             employee.setGender((String) cbGender.getSelectedItem());
             employee.setAge(age);
+            employee.setBasicSalary(newSalary);
             employee.setContactAdd(txtContact.getText().trim());
             employee.setEmpEmail(txtEmail.getText().trim());
             employee.setJobId(((JobDepartment) cbJob.getSelectedItem()).getJobId());
