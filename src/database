@@ -1,7 +1,9 @@
 DROP DATABASE IF EXISTS employee_management;
-CREATE DATABASE employee_management;
-USE employee_management;
+CREATE DATABASE employee_management
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
 
+USE employee_management;
 CREATE TABLE job_department (
     job_id INT PRIMARY KEY AUTO_INCREMENT,
     job_dept VARCHAR(100) NOT NULL UNIQUE,
@@ -14,38 +16,28 @@ CREATE TABLE employee (
     emp_id INT PRIMARY KEY AUTO_INCREMENT,
     fname VARCHAR(50) NOT NULL,
     lname VARCHAR(50) NOT NULL,
-    position VARCHAR(100),
+    position VARCHAR(100) DEFAULT 'Staff',
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
-    age INT,
+    age INT CHECK (age >= 18 AND age <= 100),
     contact_add VARCHAR(255),
     emp_email VARCHAR(100) UNIQUE NOT NULL,
     job_id INT,
     hire_date DATE,
+    basic_salary DECIMAL(12,2) DEFAULT 0,
     FOREIGN KEY (job_id) REFERENCES job_department(job_id) ON DELETE SET NULL
 );
 
 CREATE TABLE salary_bonus (
     salary_id INT PRIMARY KEY AUTO_INCREMENT,
     job_id INT NOT NULL,
-    amount DECIMAL(12,2) NOT NULL,
+    position VARCHAR(100) NOT NULL,
+    amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
     annual DECIMAL(12,2),
     bonus DECIMAL(12,2) DEFAULT 0,
-    FOREIGN KEY (job_id) REFERENCES job_department(job_id) ON DELETE CASCADE
+    FOREIGN KEY (job_id) REFERENCES job_department(job_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_dept_position (job_id, position)
 );
 
-CREATE TABLE payroll (
-    payroll_id INT PRIMARY KEY AUTO_INCREMENT,
-    emp_id INT NOT NULL,
-    job_id INT,
-    salary_id INT,
-    leave_id INT,
-    payroll_date DATE NOT NULL,
-    report TEXT,
-    total_amount DECIMAL(15,2) NOT NULL,
-    FOREIGN KEY (emp_id) REFERENCES employee(emp_id) ON DELETE CASCADE,
-    FOREIGN KEY (job_id) REFERENCES job_department(job_id) ON DELETE SET NULL,
-    FOREIGN KEY (salary_id) REFERENCES salary_bonus(salary_id) ON DELETE SET NULL
-);
 
 INSERT INTO job_department (job_dept, name, description, salary_range) VALUES
 ('HR', 'Human Resources', 'Manage recruitment and training', '8-15 million'),
@@ -53,20 +45,24 @@ INSERT INTO job_department (job_dept, name, description, salary_range) VALUES
 ('Sales', 'Sales', 'Customer acquisition', '10-20 million'),
 ('Finance', 'Finance', 'Accounting and finance', '9-18 million');
 
-INSERT INTO employee (fname, lname, position, gender, age, contact_add, emp_email, job_id, hire_date) VALUES
-('Nguyen', 'Van An', 'Manager', 'Male', 30, 'Hanoi', 'an.nguyen@company.com', 1, '2020-01-15'),
-('Tran', 'Thi Binh', 'Developer', 'Female', 28, 'Ho Chi Minh', 'binh.tran@company.com', 2, '2021-03-20'),
-('Le', 'Van Cuong', 'Sales Manager', 'Male', 35, 'Da Nang', 'cuong.le@company.com', 3, '2019-06-10'),
-('Pham', 'Thi Dung', 'Accountant', 'Female', 25, 'Hai Phong', 'dung.pham@company.com', 4, '2022-08-01'),
-('Hoang', 'Van Em', 'Developer', 'Male', 40, 'Can Tho', 'em.hoang@company.com', 2, '2018-11-20');
+INSERT INTO employee (fname, lname, position, gender, age, contact_add, emp_email, job_id, hire_date, basic_salary) VALUES
+('Nguyen', 'Van An', 'Manager', 'Male', 30, 'Ha Noi', 'an.nguyen@company.com', 1, '2020-01-15', 15000000),
+('Tran', 'Thi Binh', 'Developer', 'Female', 28, 'Ho Chi Minh', 'binh.tran@company.com', 2, '2021-03-20', 12000000),
+('Le', 'Van Cuong', 'Manager', 'Male', 35, 'Da Nang', 'cuong.le@company.com', 3, '2019-06-10', 18000000),
+('Pham', 'Thi Dung', 'Accountant', 'Female', 25, 'Hai Phong', 'dung.pham@company.com', 4, '2022-08-01', 11000000),
+('Hoang', 'Van Em', 'Developer', 'Male', 40, 'Can Tho', 'em.hoang@company.com', 2, '2018-11-20', 12000000);
 
-INSERT INTO salary_bonus (job_id, amount, annual, bonus) VALUES
-(1, 10000000, 10000000, 2000000),
-(2, 15000000, 15000000, 3000000),
-(3, 12000000, 12000000, 2500000),
-(4, 11000000, 11000000, 2000000);
+INSERT INTO salary_bonus (job_id, position, amount, bonus) VALUES
+(1, 'Manager', 15000000, 2000000),
+(1, 'Staff', 8000000, 1000000),
+(2, 'Manager', 20000000, 3000000),
+(2, 'Developer', 12000000, 2000000),
+(2, 'Tester', 9000000, 1000000),
+(3, 'Manager', 18000000, 2500000),
+(3, 'Sales Staff', 10000000, 1500000),
+(4, 'Manager', 16000000, 2000000),
+(4, 'Accountant', 11000000, 1500000);
 
-INSERT INTO payroll (emp_id, payroll_date, total_amount, report) VALUES
-(1, '2025-05-31', 12000000, 'May salary'),
-(2, '2025-05-31', 18000000, 'May salary + bonus'),
-(3, '2025-05-31', 15000000, 'May salary');
+SELECT emp_id, fname, lname, position, basic_salary FROM employee;
+SELECT * FROM job_department;
+SELECT * FROM salary_bonus;
